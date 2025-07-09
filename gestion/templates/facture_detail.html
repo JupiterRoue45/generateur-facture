@@ -1,0 +1,28 @@
+<h2>Détails de la facture #{{ facture.id }}</h2>
+<p>Date : {{ facture.date_creation }}</p>
+
+<table border="1" cellpadding="5">
+  <thead>
+    <tr>
+      <th>Produit</th>
+      <th>Prix Unitaire</th>
+      <th>Quantité</th>
+      <th>Sous-total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ligne in lignes %}
+      <tr>
+        <td>{{ ligne.produit.nom }}</td>
+        <td>{{ ligne.produit.prix }} €</td>
+        <td>{{ ligne.quantite }}</td>
+        <td>{{ ligne.produit.prix|floatformat:2|add:"0.00"|floatformat }} × {{ ligne.quantite }} = {{ ligne.produit.prix|floatformat:2|add:"0.00"|floatformat|floatformat }} €</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p><strong>Total : {{ facture.total }} €</strong></p>
+<p><strong>Nombre total de produits : {{ facture.nombre_produits }}</strong></p>
+
+<a href="{% url 'facture_creer' %}">Créer une autre facture</a>

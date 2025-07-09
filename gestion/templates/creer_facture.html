@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer une facture</title>
+    <style>
+        .ligne-formulaire {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h2>Créer une facture</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div id="formset-container">
+            {% for form in formset %}
+                <div class="ligne-formulaire">
+                    {{ form.as_p }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="button" onclick="ajouterLigne()">➕ Ajouter un produit</button>
+        <button type="submit">💾 Enregistrer la facture</button>
+
+        <!-- hidden form management -->
+        {{ formset.management_form }}
+    </form>
+
+    <script>
+        const container = document.getElementById('formset-container');
+        let totalForms = document.getElementById('id_form-TOTAL_FORMS');
+
+        function ajouterLigne() {
+            const currentFormCount = parseInt(totalForms.value);
+            const newFormHtml = container.children[0].outerHTML.replace(/form-0/g, `form-${currentFormCount}`);
+            container.insertAdjacentHTML('beforeend', newFormHtml);
+            totalForms.value = currentFormCount + 1;
+        }
+    </script>
+</body>
+</html>
