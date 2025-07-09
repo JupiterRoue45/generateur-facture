@@ -1,7 +1,11 @@
-<h2>Supprimer le produit</h2>
-<p>Es-tu sûr de vouloir supprimer "{{ object.nom }}" ?</p>
-<form method="post">
-  {% csrf_token %}
-  <button type="submit">Oui, supprimer</button>
-  <a href="{% url 'produit_liste' %}">Annuler</a>
-</form>
+{% extends 'base.html' %}
+{% block title %}Supprimer un produit{% endblock %}
+{% block content %}
+  <h2>Supprimer le produit</h2>
+  <p class="fs-4">Es-tu sûr de vouloir supprimer "{{ object.nom }}" ?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit">Oui, supprimer</button>
+    <a class="btn btn-secondary" href="{% url 'produit_liste' %}">Annuler</a>
+  </form>
+{% endblock %}

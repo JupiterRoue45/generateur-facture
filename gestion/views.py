@@ -6,11 +6,12 @@ from django.urls import reverse_lazy
 from .forms import LigneFactureForm
 from .models import Facture, LigneFacture, Produit
 from django.shortcuts import get_object_or_404
+from django.core.paginator import Paginator
 
 class ProduitListView(ListView):
     model = Produit
     template_name = 'produit_liste.html'
-    context_object_name = 'produits'
+    paginate_by = 5  
 
 class ProduitCreateView(CreateView):
     model = Produit
@@ -30,7 +31,7 @@ class ProduitDeleteView(DeleteView):
     success_url = reverse_lazy('produit_liste')
 
 def creer_facture(request):
-    LigneFormSet = forms.formset_factory(LigneFactureForm, extra=3)  # 3 lignes par défaut
+    LigneFormSet = forms.formset_factory(LigneFactureForm, extra=1)  # 1 lignes par défaut
 
     if request.method == 'POST':
         formset = LigneFormSet(request.POST)
@@ -60,3 +61,26 @@ def facture_detail(request, pk):
         'lignes': lignes
     })
 
+def facture_liste(request):
+    factures = Facture.objects.order_by('-date_creation')
+    paginator = Paginator(factures, 5)  # 5 factures par page
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'facture_liste.html', {
+        'page_obj': page_obj
+    })
+
+
+def facture_detail(request, pk):
+    facture = get_object_or_404(Facture, pk=pk)
+    lignes = facture.lignes.all()
+
+    for ligne in lignes:
+        ligne.sous_total = ligne.produit.prix * ligne.quantite
+
+    return render(request, 'facture_detail.html', {
+        'facture': facture,
+        'lignes': lignes
+    })

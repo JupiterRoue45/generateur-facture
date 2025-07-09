@@ -1,24 +1,32 @@
 {% extends 'base.html' %}
-{% block title %}Ajouter des produits{% endblock %}
+
+{% block title %}Liste des factures{% endblock %}
+
 {% block content %}
 
-<h2>Liste des produits</h2>
-<a class="btn btn-primary mb-3" href="{% url 'produit_ajouter' %}">Ajouter un produit</a>
+<h2 class="mb-3">Liste des factures</h2>
 
 <div class="container">
   <div class="row row-cols-1">
-    {% for produit in page_obj %}
+    {% for facture in page_obj %}
       <div class="col mb-3">
         <div class="card p-3 d-flex flex-column flex-md-row justify-content-between align-items-center">
-          <div><strong>{{ produit.nom }}</strong> – {{ produit.prix }} €</div>
           <div>
-            <a class="btn btn-sm btn-warning me-2" href="{% url 'produit_modifier' produit.pk %}">Modifier</a>
-            <a class="btn btn-sm btn-danger" href="{% url 'produit_supprimer' produit.pk %}">Supprimer</a>
+            <a href="{% url 'facture_detail' facture.id %}">
+              Facture #{{ facture.id }}
+            </a> — {{ facture.date_creation }}
+            <br>
+            Total : {{ facture.total }} € — Produits : {{ facture.nombre_produits }}
+          </div>
+          <div>
+            <a href="{% url 'facture_detail' facture.id %}" class="btn btn-sm btn-primary">Voir</a>
           </div>
         </div>
       </div>
     {% empty %}
-      <div class="col">Aucun produit trouvé.</div>
+      <div class="col">
+        <div class="alert alert-info">Aucune facture enregistrée.</div>
+      </div>
     {% endfor %}
   </div>
 </div>
@@ -38,6 +46,10 @@
   {% else %}
     <span></span>
   {% endif %}
+</div>
+
+<div class="mt-4">
+  <a href="{% url 'facture_creer' %}" class="btn btn-success">Créer une facture</a>
 </div>
 
 {% endblock %}

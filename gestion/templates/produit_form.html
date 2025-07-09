@@ -1,6 +1,22 @@
-<h2>Produit</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Valider</button>
-</form>
+{% extends 'base.html' %}
+
+{% block title %}
+  {% if object %}Modifier un produit{% else %}Ajouter un produit{% endif %}
+{% endblock %}
+
+{% block content %}
+  <h2 class="mb-4">
+    {% if object %}Modifier un produit{% else %}Ajouter un produit{% endif %}
+  </h2>
+
+  <form method="post" class="mb-3">
+    {% csrf_token %}
+    <div class="mb-3">
+      {{ form.as_p }}
+    </div>
+    <button type="submit" class="btn btn-success">
+      {% if object %}Enregistrer les modifications{% else %}Ajouter le produit{% endif %}
+    </button>
+    <a href="{% url 'produit_liste' %}" class="btn btn-secondary">Annuler</a>
+  </form>
+{% endblock %}
